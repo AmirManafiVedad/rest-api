@@ -4,24 +4,30 @@ namespace App\Http\Controllers;
 use App\Article;
 use App\Http\Requests\Article\CreateRequest;
 use App\Http\Requests\Article\UpdateRequest;
+use App\Http\Resources\ArticleResource;
 use App\User;
 use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
-    function index(){
-            return Article::all();
+    function index(Request $request){
+//        //////////////////
+//        Error Statues 500
+//        /////////////////
+        $article = Article::paginate(2);
+        return $article = ArticleResource::collection($article);
     }
 
     function show(Request $request , $id){
-        $user = Article::findorfail($id);
-        return $user;
+        $articles = Article::findorfail($id);
+        return new ArticleResource($articles);
+
     }
 
     public function create(CreateRequest $request)
     {
         $data = $request->only('title' , 'body');
-        $user = User::find(1);
+        $user = User::find(auth()->user()->id);
         $articles = $user->articles()->create($data);
         return response($articles , 201);
     }

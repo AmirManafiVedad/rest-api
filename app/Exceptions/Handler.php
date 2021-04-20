@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Exception;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
@@ -56,6 +57,12 @@ class Handler extends ExceptionHandler
                 return response([ 'error' => $exception->errors()] , 422);
             }
 //            End Control Error Validation
+
+//            Control Error AuthenticationException
+            if ($exception instanceof AuthenticationException){
+                return response([ 'error' => 'شما به این بخش دسترسی ندارید' ], 401);
+            }
+//            End Control Error AuthenticationException
 
             $code = method_exists($exception , 'getStatusCode')? $exception->getStatusCode() : 500;
             $code = (empty($code) ? 500 : $code);

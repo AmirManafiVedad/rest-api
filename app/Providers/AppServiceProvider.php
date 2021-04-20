@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Http\Resources\Json\Resource;
 use Illuminate\Support\ServiceProvider;
 use mysql_xdevapi\Schema;
 
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-//        Schema::defaultStringLength(191);
+        Resource::wrap('Raman');
+//        Resource::withoutWrapping();
     }
 }

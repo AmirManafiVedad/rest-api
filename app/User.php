@@ -40,4 +40,15 @@ class User extends Authenticatable
     public function articles(){
         return $this->hasMany(Article::class);
     }
+    public function generateToken(){
+        $token = str_random(50);
+        $this->api_token = $token;
+        $this->save();
+        return $token;
+    }
+    public function logout(){
+        $this->api_token = null;
+        $this->save();
+        return $this;
+    }
 }

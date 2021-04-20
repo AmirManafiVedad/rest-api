@@ -4,24 +4,37 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function login(LoginRequest $request){
 
-//        $user = User::where([
-//            'email' => $request->username,
-//            'password' => $request->password,
-//        ])->first();
-//        dd($user);
-//        if (!empty($user)){
-//            $check = Hash::check($request->password , $user->password);
-//            dd($check);
-//        }
         auth()->attempt([
-           'email' => $request->email,
+            'email' => $request->username,
+            'password' => $request->password,
         ]);
 
+        if (auth()->check()){
+            return response([
+                'token' => auth()->user()->generateToken(),
+            ]);
+        }
+        return response([
+            'massage' => 'اطلاعات کاربر نادرست است'
+        ],401);
+    }
+
+//
+    public function logout(){
+        $user = auth()->guard('api')->user();
+        $user->logout();
+        return $user;
+    }
+
+//
+    public function user(){
+        return auth('api')->user();
     }
 }

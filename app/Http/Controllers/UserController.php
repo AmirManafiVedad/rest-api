@@ -2,27 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\User\CreateRequest;
-use App\Http\Requests\User\UpdateRequest;
+use App\Http\Resources\UserResource;
+use App\Http\Resources\UserResourceCollection;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    function index(){
-            return User::all();
+    function index(Request $request){
+        $user = User::all();
+        $user = new UserResourceCollection($user);
+        return $user;
     }
 
     public function show(Request $request , $id){
             $user = User::findorfail($id);
-            return $user;
+            return $user = new UserResource($user);
 
     }
     public function create(CreateRequest $request){
+
         $users = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' =>  $request->password,
+            'password' =>  Hash::make($request->password),
         ]);
         return response($users , 201);
     }
