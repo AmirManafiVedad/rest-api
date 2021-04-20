@@ -15,7 +15,7 @@ class ArticleController extends Controller
 //        Error Statues 500
 //        /////////////////
         $article = Article::paginate(2);
-        return $article = ArticleResource::collection($article);
+        dd($article = ArticleResource::collection($article)) ;
     }
 
     function show(Request $request , $id){
